@@ -17,15 +17,18 @@ export class Order {
     @Column() 
     email:string;
 
-    @Column()
+    @Column()   
     phone: string;
 
     @Column()
     address: string;
+
+    @Column({nullable: true})
+    image: string;
 
     @Column()
     message: string;
 
     @CreateDateColumn()
     created_at: Date;
-}
+} 

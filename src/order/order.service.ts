@@ -19,7 +19,8 @@ export class OrderService {
             email: createOrderDto.email,
             address: createOrderDto.address,
             message: createOrderDto.message,
-            phone: createOrderDto.phone
+            phone: createOrderDto.phone,
+            image: createOrderDto.image
         }
         if (!newOrder) return new BadRequestException()
 

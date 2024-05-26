@@ -6,4 +6,5 @@ export class CreateOrderDto {
     phone: string;
     address: string;
     message: string;
+    image: string;
 }
