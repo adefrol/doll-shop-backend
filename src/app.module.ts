@@ -36,7 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule'
       useFactory: (configService: ConfigService) => ({
         url: configService.get('DB_URL'),
         type: 'postgres',
-        ssl: true,
+        ssl: false,
         synchronize: true,
         entities: [__dirname + '/**/*.entity.{ts,js}'],
       }),
