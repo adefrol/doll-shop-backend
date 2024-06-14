@@ -2,12 +2,15 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtService } from '@nestjs/jwt';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { ProfileUserDto } from './dto/profile-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -65,5 +68,27 @@ export class UsersService {
       phone: createUserDto.phone,
     });
     return { user, statusCode: 200 };
+  }
+
+  async changePassword(updateUserDto: UpdateUserDto) {
+    const user = await this.findOneById(updateUserDto.id);
+
+    if (user.password != updateUserDto.oldPass) {
+      throw new BadRequestException();
+    }
+
+    await this.userRepository.save({
+      id: updateUserDto.id,
+      password: updateUserDto.newPass,
+    });
+  }
+
+  async update(profileUserDto: ProfileUserDto) {
+    return await this.userRepository.save({
+      id: profileUserDto.id,
+      email: profileUserDto.email,
+      name: profileUserDto.name,
+      phone: profileUserDto.phone,
+    });
   }
 }

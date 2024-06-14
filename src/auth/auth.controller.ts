@@ -14,8 +14,10 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UsersService } from 'src/user/user.service';
 import { GetToken } from './decorators/token.decorator';
-import { RolesGuard } from './guards/roles.guard'
-import { JwtAuthGuard } from './guards/jwt-auth.guard'
+import { RolesGuard } from './guards/roles.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { ProfileUserDto } from 'src/user/dto/profile-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -56,5 +58,17 @@ export class AuthController {
   @Get('isLogin')
   async isLogged() {
     return { status: 200 };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-pass')
+  changePassword(@Body() updateUserDto: UpdateUserDto) {
+    return this.userService.changePassword(updateUserDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('edit')
+  async edit(@Body() profileUserDto: ProfileUserDto) {
+    return this.userService.update(profileUserDto);
   }
 }
