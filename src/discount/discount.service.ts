@@ -6,7 +6,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Discount } from './entities/discount.entity';
 import { Repository } from 'typeorm';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class DiscountService {
@@ -14,7 +13,7 @@ export class DiscountService {
     private productService: ProductService,
     @InjectRepository(Discount)
     private readonly discountRepository: Repository<Discount>,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+
   ) {}
 
   async create(createDiscountDto: CreateDiscountDto) {
@@ -32,7 +31,6 @@ export class DiscountService {
         createdDiscount,
         createDiscountDto.type,
       );
-      await this.cacheManager.del('product');
 
       return setDiscountProducts
     } catch {
@@ -50,7 +48,6 @@ export class DiscountService {
       discounts.forEach(async (element) => {
         if (element.expired_at.getTime() < new Date(Date.now()).getTime()) {
           this.remove(element.id);
-          await this.cacheManager.del('product');
         }
       });
     }
@@ -72,7 +69,6 @@ export class DiscountService {
     const remove = await this.discountRepository.remove(
       await this.discountRepository.findOne({ where: { id } }),
     );
-    await this.cacheManager.del('product');
     return remove
   }
 }

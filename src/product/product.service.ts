@@ -34,7 +34,7 @@ export class ProductService {
     if (!newProduct) throw new NotFoundException('something went wrong');
 
     const product = await this.productRepository.save(newProduct);
-    await this.cacheManager.del('product');
+
     return product;
   }
 
@@ -67,12 +67,10 @@ export class ProductService {
     await this.productRepository.save(
       updateProductDto,
     );
-    await this.cacheManager.del('product');
   }
 
   async remove(id: number) {
     await this.productRepository.delete(await this.findOneWithoutRelation(id));
-    await this.cacheManager.del('product');
   }
 
   async findByCategory(categoryId: number) {
